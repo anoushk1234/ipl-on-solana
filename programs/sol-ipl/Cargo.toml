@@ -1,0 +1,25 @@
+[package]
+name = "sol-ipl"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "sol_ipl"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[profile.release]
+overflow-checks = true
+
+[dependencies]
+anchor-lang="0.24.0"
+anchor-spl ="0.24.0"
+# cronos-sdk = "0.1.8"
+switchboard-v2 = "0.1.10"
