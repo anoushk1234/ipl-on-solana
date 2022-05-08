@@ -20,3 +20,25 @@ pub struct ArenaHostAccount {
     pub arena_count: u64,
     pub bump: u8,
 }
+#[account]
+pub struct Player {
+    pub bet_count: u64,
+    pub bump: u8,
+}
+
+#[account]
+pub struct Bet {
+    pub wager_type: WagerTypes,
+    pub aggregator_key: Pubkey,
+    pub arena_key: Pubkey,
+}
+#[derive(AnchorSerialize, AnchorDeserialize, Copy, Clone)]
+pub enum WagerTypes {
+    MatchOutcome,
+    InningRuns,
+}
+impl Default for WagerTypes {
+    fn default() -> Self {
+        WagerTypes::MatchOutcome
+    }
+}

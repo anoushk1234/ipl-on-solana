@@ -1,11 +1,15 @@
-use anchor_lang::prelude::*;
 mod errors;
 mod events;
 mod state;
+mod structures;
 use crate::errors::CustomErrorCodes::*;
 use crate::events::*;
 use crate::state::*;
+use crate::structures::*;
+
+use anchor_lang::prelude::*;
 use switchboard_v2::AggregatorAccountData;
+
 declare_id!("HDa6A4wLjEymb8Cv3UGeGBnFUNCUEMpoiVBbkTKAkfrt");
 
 #[program]
@@ -14,6 +18,11 @@ pub mod sol_ipl {
     pub fn initialize_arena_host(ctx: Context<InitializeArenaHost>) -> Result<()> {
         ctx.accounts.arena_host_account.arena_count = 0;
         ctx.accounts.arena_host_account.bump = *ctx.bumps.get("arena_host_account").unwrap();
+        Ok(())
+    }
+    pub fn initialize_player(ctx: Context<InitializePlayer>) -> Result<()> {
+        ctx.accounts.player_account.bet_count = 0;
+        ctx.accounts.player_account.bump = *ctx.bumps.get("arena_host_account").unwrap();
         Ok(())
     }
     pub fn create_arena(
@@ -62,41 +71,16 @@ pub mod sol_ipl {
 
         Ok(())
     }
-}
+    pub fn place_bet(ctx: Context<PlaceBet>) -> Result<()> {
+        ctx.accounts
+            .player_account
+            .bet_count
+            .checked_add(1)
+            .unwrap();
+        ctx.accounts.bet_account.wager_type = WagerTypes::MatchOutcome;
+        ctx.accounts.bet_account.aggregator_key = ctx.accounts.arena_account.aggregator_key;
+        ctx.accounts.bet_account.arena_key = ctx.accounts.arena_account.key();
 
-#[derive(Accounts)]
-pub struct CreateArena<'info> {
-    #[account(
-        init,
-        payer=host,
-        seeds = [b"arena-account-key",host.key().as_ref(),[arena_host_account.arena_count as u8].as_ref()], bump,
-        space=9000)]
-    pub arena_account: Account<'info, ArenaAccount>,
-    #[account(mut)]
-    pub host: Signer<'info>,
-    #[account(mut,seeds = [b"arena-host-key",host.key().as_ref()
-    ], bump=arena_host_account.bump)]
-    pub arena_host_account: Account<'info, ArenaHostAccount>,
-    pub system_program: Program<'info, System>,
-}
-
-#[derive(Accounts)]
-pub struct GetResult<'info> {
-    pub authority: Signer<'info>,
-    /// CHECK: field is unsafe
-    pub aggregator_feed: AccountInfo<'info>, // pass aggregator key
-    #[account(mut,seeds = [b"arena-account-key",arena_account.host.key().as_ref()], bump=arena_account.bump)]
-    pub arena_account: Account<'info, ArenaAccount>,
-}
-
-#[derive(Accounts)]
-pub struct InitializeArenaHost<'info> {
-    #[account(
-        init,
-        seeds = [b"arena-host-key",authority.key().as_ref()], bump,payer = authority,
-        space=9000)]
-    pub arena_host_account: Account<'info, ArenaHostAccount>,
-    #[account(mut)]
-    pub authority: Signer<'info>,
-    pub system_program: Program<'info, System>,
+        Ok(())
+    }
 }
