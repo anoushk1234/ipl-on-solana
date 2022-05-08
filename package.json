@@ -5,7 +5,8 @@
     },
     "dependencies": {
         "@metaplex-foundation/amman": "^0.6.3",
-        "@project-serum/anchor": "^0.24.2"
+        "@project-serum/anchor": "^0.24.2",
+        "@switchboard-xyz/switchboard-v2": "^0.0.95"
     },
     "devDependencies": {
         "@types/bn.js": "^5.1.0",

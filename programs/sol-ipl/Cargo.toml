@@ -19,7 +19,8 @@ default = []
 overflow-checks = true
 
 [dependencies]
-anchor-lang="0.24.0"
-anchor-spl ="0.24.0"
+# anchor-lang={path="../../../anchor-0.22.0/lang", version="0.22.0"}
+anchor-lang="0.24.2"
+anchor-spl ="0.24.2"
 # cronos-sdk = "0.1.8"
 switchboard-v2 = "0.1.10"

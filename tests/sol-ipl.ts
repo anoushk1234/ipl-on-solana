@@ -1,6 +1,10 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { SolIpl } from "../target/types/sol_ipl";
+import {
+  SwitchboardTestContext,
+  SwitchboardTestEnvironment,
+} from "@switchboard-xyz/switchboard-v2";
 import NodeWallet from "@project-serum/anchor/dist/cjs/nodewallet";
 describe("sol-ipl", () => {
   // Configure the client to use the local cluster.
@@ -10,7 +14,6 @@ describe("sol-ipl", () => {
   const program = anchor.workspace.SolIpl as Program<SolIpl>;
 
   it("Is initialized!", async () => {
-    // Add your test here.
     try {
       const tx = await program.methods
         .createAggregator()
